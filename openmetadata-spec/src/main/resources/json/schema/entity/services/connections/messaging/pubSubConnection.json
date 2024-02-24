@@ -1,0 +1,49 @@
+{
+  "$id": "https://open-metadata.org/schema/entity/services/connections/messaging/pubSubConnection.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PubSubConnection",
+  "description": "PubSub Connection Config",
+  "type": "object",
+  "javaType": "org.openmetadata.schema.services.connections.messaging.PubSubConnection",
+  "definitions": {
+    "pubSubType": {
+      "description": "PubSub service type",
+      "type": "string",
+      "enum": ["PubSub"],
+      "default": "PubSub"
+    }
+  },
+  "properties": {
+    "type": {
+      "title": "Service Type",
+      "description": "Service Type",
+      "$ref": "#/definitions/pubSubType",
+      "default": "PubSub"
+    },
+    "hostPort": {
+      "title": "Host and Port",
+      "description": "PubSub APIs URL.",
+      "type": "string",
+      "default": "pubsub.googleapis.com"
+    },
+    "credentials": {
+      "title": "GCP Credentials",
+      "description": "GCP Credentials",
+      "$ref": "../../../../security/credentials/gcpCredentials.json"
+    },
+    "connectionOptions": {
+      "title": "Connection Options",
+      "$ref": "../connectionBasicType.json#/definitions/connectionOptions"
+    },
+    "connectionArguments": {
+      "title": "Connection Arguments",
+      "$ref": "../connectionBasicType.json#/definitions/connectionArguments"
+    },
+    "supportsMetadataExtraction": {
+      "title": "Supports Metadata Extraction",
+      "$ref": "../connectionBasicType.json#/definitions/supportsMetadataExtraction"
+    }
+  },
+  "additionalProperties": false,
+  "required": ["hostPort","credentials"]
+}

@@ -60,6 +60,7 @@ import postgres from '../assets/img/service-icon-post.png';
 import powerbi from '../assets/img/service-icon-power-bi.png';
 import prefect from '../assets/img/service-icon-prefect.png';
 import presto from '../assets/img/service-icon-presto.png';
+import pubSub from '../assets/img/service-icon-pubsub.png';
 import pulsar from '../assets/img/service-icon-pulsar.png';
 import qlikSense from '../assets/img/service-icon-qlik-sense.png';
 import query from '../assets/img/service-icon-query.png';
@@ -137,6 +138,7 @@ export const MARIADB = mariadb;
 export const VERTICA = vertica;
 export const KAFKA = kafka;
 export const PULSAR = pulsar;
+export const PUBSUB = pubSub;
 export const REDPANDA = redpanda;
 export const SUPERSET = superset;
 export const LOOKER = looker;
@@ -389,6 +391,7 @@ export const BETA_SERVICES = [
   DatabaseServiceType.Couchbase,
   DatabaseServiceType.Greenplum,
   DatabaseServiceType.Iceberg,
+  MessagingServiceType.PubSub,
 ];
 
 export const TEST_CONNECTION_INITIAL_MESSAGE = i18n.t(
