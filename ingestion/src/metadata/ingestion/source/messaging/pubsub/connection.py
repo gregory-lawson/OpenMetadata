@@ -71,7 +71,7 @@ def test_connection(
 
     def get_schemas():
         project_path = f'projects/{client.schema_client.transport._credentials.project_id}'
-        return client.schema_client.list_topics(request={'parent': project_path}, timeout=TIMEOUT_SECONDS)
+        return client.schema_client.list_schemas(request={'parent': project_path}, timeout=TIMEOUT_SECONDS)
 
 
     def get_subscriptions():
