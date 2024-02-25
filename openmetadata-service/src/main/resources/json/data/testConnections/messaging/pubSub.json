@@ -5,8 +5,22 @@
     "steps": [
         {
             "name": "GetTopics",
-            "description":  "List all the topics available to the user.",
+            "description":  "List all the topics visible to the user.",
             "errorMessage": "Failed to fetch topics, please validate the credentials or validate if user has access to fetch topics",
+            "shortCircuit": true,
+            "mandatory": true
+        },
+        {
+            "name": "GetSchemas",
+            "description":  "List all the schemas visible to the user.",
+            "errorMessage": "Failed to fetch schemas, please validate the credentials or validate if user has access to fetch schemas",
+            "shortCircuit": true,
+            "mandatory": true
+        },
+        {
+            "name": "GetSubscriptions",
+            "description":  "List all the subscriptions visible to the user.",
+            "errorMessage": "Failed to fetch subscriptions, please validate the credentials or validate if user has access to fetch subscriptions",
             "shortCircuit": true,
             "mandatory": true
         }
