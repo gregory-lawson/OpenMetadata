@@ -30,9 +30,9 @@ TIMEOUT_SECONDS = 10
 @dataclass
 class PubSubClient:
     def __init__(self, publisher_client, schema_client, subscriber_client) -> None:
-        self.publisher_client = publisher_client
-        self.schema_client = schema_client
-        self.subscriber_client = subscriber_client
+        self.publisher_client: PublisherClient = publisher_client
+        self.schema_client: SchemaServiceClient = schema_client
+        self.subscriber_client: SubscriberClient = subscriber_client
 
 
 def get_connection(
