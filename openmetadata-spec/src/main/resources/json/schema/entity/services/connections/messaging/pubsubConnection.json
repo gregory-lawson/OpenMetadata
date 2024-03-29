@@ -1,0 +1,67 @@
+{
+    "$id": "https://open-metadata.org/schema/entity/services/connections/messaging/pubsubConnection.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "PubsubConnection",
+    "description": "Google Pubsub Connection Config",
+    "type": "object",
+    "javaType": "org.openmetadata.schema.services.connections.messaging.PubsubConnection",
+    "definitions": {
+      "pubsubType": {
+        "description": "Service type.",
+        "type": "string",
+        "enum": [ "Pubsub" ],
+        "default": "Pubsub"
+      }
+    },
+    "properties": {
+      "type": {
+        "title": "Service Type",
+        "description": "Service Type",
+        "$ref": "#/definitions/pubsubType",
+        "default": "Pubsub"
+      },
+      "hostPort": {
+        "title": "Host and Port",
+        "description": "Pubsub APIs URL.",
+        "type": "string",
+        "default": "pubsub.googleapis.com"
+      },
+      "credentials": {
+        "title": "GCP Credentials",
+        "description": "GCP Credentials",
+        "$ref": "../../../../security/credentials/gcpCredentials.json"
+      },
+      "taxonomyProjectID": {
+        "title": "Taxonomy Project IDs",
+        "description": "Project IDs used to fetch policy tags",
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "default": null
+      },
+      "taxonomyLocation": {
+        "title": "Taxonomy Location",
+        "description": "Taxonomy location used to fetch policy tags",
+        "type": "string",
+        "default": "us"
+      },
+      "connectionOptions": {
+        "title": "Connection Options",
+        "$ref": "../connectionBasicType.json#/definitions/connectionOptions"
+      },
+      "connectionArguments": {
+        "title": "Connection Arguments",
+        "$ref": "../connectionBasicType.json#/definitions/connectionArguments"
+      },
+      "supportsMetadataExtraction": {
+        "title": "Supports Metadata Extraction",
+        "$ref": "../connectionBasicType.json#/definitions/supportsMetadataExtraction"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "credentials"
+    ]
+  }
+  

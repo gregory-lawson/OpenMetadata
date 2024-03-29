@@ -244,6 +244,7 @@ plugins: Dict[str, Set[str]] = {
         VERSIONS["packaging"],
     },
     "powerbi": {VERSIONS["msal"]},
+    "pubsub": {"google-cloud-pubsub"},
     "qliksense": {"websocket-client~=1.6.1"},
     "presto": {*COMMONS["hive"]},
     "pymssql": {"pymssql~=2.2.0"},

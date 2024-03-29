@@ -67,6 +67,7 @@ import {
   POSTGRES,
   POWERBI,
   PRESTO,
+  PUBSUB,
   QLIK_SENSE,
   QUICKSIGHT,
   REDASH,
@@ -273,6 +274,9 @@ class ServiceUtilClassBase {
 
       case MessagingServiceType.Kinesis:
         return KINESIS;
+
+      case MessagingServiceType.Pubsub:
+        return PUBSUB;
 
       case DashboardServiceType.Superset:
         return SUPERSET;
