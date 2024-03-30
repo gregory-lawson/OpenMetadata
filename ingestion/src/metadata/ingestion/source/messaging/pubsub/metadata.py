@@ -80,7 +80,8 @@ class PubsubSource(MessagingServiceSource):
                 messageSchema=self._compute_schema(topic_details),
                 service=self.context.get().messaging_service,
                 retentionTime=self._compute_retention_time(topic_details),
-                partitions=1
+                partitions=1,
+                topicConfig=self._compute_topic_configuration(topic_details),
             )
             yield Either(right=topic)
             self.register_record(topic_request=topic)
@@ -148,4 +149,20 @@ class PubsubSource(MessagingServiceSource):
         """
         Parse the fields of the PubSub schema into structured data
         """
+        return None
+    
+    def _compute_topic_configuration(self, topic_details: Topic) -> Optional[Any]:
+        """
+        Assemble key-value pairs of TopicConfiguration details for Pubsub
+        """
+        kvp = dict()
+        if (topic_details.schema_settings.encoding):
+            if (topic_details.schema_settings.encoding == 1):
+                kvp['Encoding'] = "Json"
+            elif (topic_details.schema_settings.encoding == 2):
+                kvp['Encoding'] = "Binary"
+
+        if (len(kvp.keys()) > 0):
+            return kvp
+
         return None
