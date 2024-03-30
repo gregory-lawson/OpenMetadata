@@ -9,7 +9,8 @@ from metadata.generated.schema.api.data.createTopic import CreateTopicRequest
 from metadata.generated.schema.type.schema import (
     Topic as TopicSchema,
     SchemaType,
-    FieldModel
+    FieldModel,
+    DataTypeTopic
 )
 from metadata.generated.schema.entity.services.connections.messaging.pubsubConnection import (
     PubsubConnection,
@@ -32,6 +33,7 @@ from metadata.ingestion.source.messaging.pubsub.connection import (
 )
 from google.pubsub_v1 import Topic, Encoding
 from google.pubsub_v1.types.schema import Schema
+import avro.schema
 
 from metadata.utils.logger import ingestion_logger
 
@@ -81,7 +83,6 @@ class PubsubSource(MessagingServiceSource):
                 service=self.context.get().messaging_service,
                 retentionTime=self._compute_retention_time(topic_details),
                 partitions=1,
-                topicConfig=self._compute_topic_configuration(topic_details),
             )
             yield Either(right=topic)
             self.register_record(topic_request=topic)
@@ -127,8 +128,8 @@ class PubsubSource(MessagingServiceSource):
             result = self.pubsub.schema_client.get_schema({'name': topic_details.schema_settings.schema})
             topic_schema = TopicSchema()
             topic_schema.schemaText = result.definition
-            topic_schema.schemaType = self._compute_schema_type(result)     
-            topic_schema.schemaFields = self._compute_schema_fields(result)       
+            topic_schema.schemaType = self._compute_schema_type(result)
+            topic_schema.schemaFields = self._compute_schema_fields(topic_schema.schemaType, result.definition)       
             
             return topic_schema
 
@@ -143,26 +144,41 @@ class PubsubSource(MessagingServiceSource):
         elif (schema_record.type_ == Schema.Type.PROTOCOL_BUFFER):
             return SchemaType.Protobuf
         
-        return None
+        return SchemaType.None_
     
-    def _compute_schema_fields(self, schema_record: Schema) -> Optional[List[FieldModel]]:
+    def _compute_schema_fields(self, schema_type: SchemaType, schema_definition: str) -> Optional[List[FieldModel]]:
         """
         Parse the fields of the PubSub schema into structured data
         """
-        return None
+        if (schema_type == SchemaType.Avro):
+            fields: List[FieldModel] = []
+            schema = avro.schema.parse(schema_definition)
+            for field in schema.props['fields']:
+                fields.append(FieldModel(
+                    name=field.name,
+                    dataType=self._compute_avro_type_mapping(field.type.fullname),
+                ))
+
+            return fields
+
+        if (schema_type == SchemaType.Protobuf):
+            # TODO: Extract field-details from the raw proto spec off the Pubsub topic
+            return []
+        
+        return []
     
-    def _compute_topic_configuration(self, topic_details: Topic) -> Optional[Any]:
+    def _compute_avro_type_mapping(self, avro_type: str) -> DataTypeTopic:
         """
-        Assemble key-value pairs of TopicConfiguration details for Pubsub
+        Map from Avro schema types to DataTypeTopic
         """
-        kvp = dict()
-        if (topic_details.schema_settings.encoding):
-            if (topic_details.schema_settings.encoding == 1):
-                kvp['Encoding'] = "Json"
-            elif (topic_details.schema_settings.encoding == 2):
-                kvp['Encoding'] = "Binary"
-
-        if (len(kvp.keys()) > 0):
-            return kvp
-
-        return None
+        type_map = {
+            key.lower(): value.value
+            for key, value in DataTypeTopic.__members__.items()
+        }
+        return type_map.get(avro_type.lower(), DataTypeTopic.UNKNOWN.value)
+    
+    def _compute_proto_type_mapping(self, proto_type: str) -> DataTypeTopic:
+        """
+        Map from protobuf schema types to DataTypeTopic
+        """
+        return DataTypeTopic.UNKNOWN
